@@ -1,5 +1,7 @@
 import flet as ft
 from datetime import datetime
+import random
+
 
 def main_page(page: ft.Page):
     page.title = 'My first app'
@@ -7,13 +9,16 @@ def main_page(page: ft.Page):
 
     hello_text = ft.Text(value="Helooow")
 
-    greeting_history = []  
+    greeting_history: list[str] = []  
     history_text = ft.Text("Greeting history:")
 
     favorites = []         
     favorites_text = ft.Text("Favorites:")
     last_name = {"value": ""} 
 
+
+    random_names = ["Алексей", "Мария", "Иван", "Ольга", "Дмитрий", "Елена", "Александр", "Анна"]
+    
     def update_history():
         if greeting_history:
             history_text.value = "Greeting history: ".join(greeting_history)
@@ -77,14 +82,29 @@ def main_page(page: ft.Page):
         greeting_history.clear()
         update_history()
         favorites.clear()
+        update_favorites()
         page.update()
+
+    def set_random_name(e):
+        name_input.value = random.choice(random_names)
+        page.update
+
+    def hide_history(e):
+        history_text.visible = not history_text.visible
+        hide_history_button.text = "SHOW HISTORY" if not history_text.visible else "HIDE HISTORY"
+        hide_history_button.icon = ft.Icons.VISIBILITY if not history_text.visible else ft.Icons.VISIBILITY_OFF
+        page.update()
+
 
     elevated_button = ft.ElevatedButton("SEND", icon=ft.Icons.SEND, on_click=on_button_click)
     name_input = ft.TextField(label="Enter your name")
     clear_button = ft.IconButton(ft.Icons.CLEAR, tooltip="Clear history", on_click=clear_history)
     favorite_button = ft.ElevatedButton("ADD TO FAVORITES", icon=ft.Icons.STAR, on_click=add_favorite)
+    random_name_button = ft.ElevatedButton("RANDOM NAME", icon=ft.Icons.CASINO, on_click=set_random_name)
+    hide_history_button = ft.ElevatedButton("HIDE HISTORY", icon=ft.Icons.VISIBILITY_OFF, on_click=hide_history)
 
-    page.add(hello_text,name_input, elevated_button, theme_button, history_text, clear_button, favorite_button, favorites_text)
+
+    page.add(hello_text,name_input, elevated_button, theme_button, history_text, clear_button, favorite_button, favorites_text, random_name_button, hide_history_button)
 
 
 ft.app(main_page)
